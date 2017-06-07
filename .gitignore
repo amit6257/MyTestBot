@@ -1,0 +1,8 @@
+*.dll
+*.exe
+.nuget
+.vs
+Documents/
+Library/
+[Dd]ebug/
+[Rr]elease/
