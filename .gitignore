@@ -6,3 +6,7 @@ Documents/
 Library/
 [Dd]ebug/
 [Rr]elease/
+packages/
+bin/
+obj/
+Properties/
