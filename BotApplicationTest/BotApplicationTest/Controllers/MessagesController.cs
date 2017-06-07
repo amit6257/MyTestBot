@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using System;
 
 namespace BotApplicationTest
 {
@@ -18,6 +19,11 @@ namespace BotApplicationTest
         {
             if (activity.Type == ActivityTypes.Message)
             {
+                //await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+
+                SaveActivityDataToDB(activity);
+                // Call NumberGuesserDialog
+                // await Conversation.SendAsync(activity, () => new NumberGuesserDialog());
                 await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
             }
             else
@@ -26,6 +32,27 @@ namespace BotApplicationTest
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+        }
+
+        public static void SaveActivityDataToDB(Activity activity)
+        {
+            // *************************
+            // Log to Database
+            // *************************
+            // Instantiate the BotData dbContext
+            Models.BotDataEntities DB = new Models.BotDataEntities();
+            // Create a new UserLog object
+            Models.UserLog NewUserLog = new Models.UserLog();
+            // Set the properties on the UserLog object
+            NewUserLog.Channel = activity.ChannelId;
+            NewUserLog.UserID = activity.From.Id;
+            NewUserLog.UserName = activity.From.Name;
+            NewUserLog.created = DateTime.UtcNow;
+            NewUserLog.Message = activity.Text.Truncate(500);
+            // Add the UserLog object to UserLogs
+            DB.UserLogs.Add(NewUserLog);
+            // Save the changes to the database
+            DB.SaveChanges();
         }
 
         private Activity HandleSystemMessage(Activity message)
