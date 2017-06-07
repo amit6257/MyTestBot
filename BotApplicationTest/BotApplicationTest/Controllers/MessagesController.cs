@@ -5,6 +5,9 @@ using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using BotApplicationTest.Models;
 
 namespace BotApplicationTest
 {
@@ -53,6 +56,22 @@ namespace BotApplicationTest
             DB.UserLogs.Add(NewUserLog);
             // Save the changes to the database
             DB.SaveChanges();
+
+            
+        }
+
+        public static string GetAllSavedMessages()
+        {
+            string allMessages = "";
+
+            Models.BotDataEntities DB = new Models.BotDataEntities();
+            DbSqlQuery<UserLog> dbSqlQuery = DB.UserLogs.SqlQuery("select * from UserLog");
+            foreach (UserLog x in dbSqlQuery)
+            {
+                allMessages += x.Message + "\n\n";
+            }
+
+            return allMessages;
         }
 
         private Activity HandleSystemMessage(Activity message)

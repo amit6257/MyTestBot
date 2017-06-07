@@ -22,7 +22,7 @@ namespace BotApplicationTest.Dialogs
             // calculate something for us to return
             int length = (activity.Text ?? string.Empty).Length;
 
-            Activity replyActivity = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
+            Activity replyActivity = activity.CreateReply($"You sent {activity.Text} which was {length} characters" + MessagesController.GetAllSavedMessages());
 
             MessagesController.SaveActivityDataToDB(replyActivity);
 
